@@ -63,3 +63,7 @@ class FileStorage:
                 if self.__objects[key] == obj:
                     del self.__objects[key]
                     return
+
+    def close(self):
+        '''closes json'''
+        self.reload()
