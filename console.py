@@ -10,6 +10,25 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+import os
+
+
+def checkInt(str, neg):
+    '''Checks if string is an integer'''
+    if neg == 1 and str.startswith('-'):
+        if str[1:].isnumeric():
+            return True, str
+    elif str.isnumeric():
+        return True
+
+
+def escQuotes(str):
+    '''Checks escapes quotes'''
+    for i, char in enumerate(str):
+        if char == '"':
+            if str[i - 1] != '\\':
+                return False
+    return True
 
 
 class HBNBCommand(cmd.Cmd):
@@ -19,16 +38,16 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
-             'number_rooms': int, 'number_bathrooms': int,
-             'max_guest': int, 'price_by_night': int,
-             'latitude': float, 'longitude': float
-            }
+        'number_rooms': int, 'number_bathrooms': int,
+        'max_guest': int, 'price_by_night': int,
+        'latitude': float, 'longitude': float
+    }
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -73,7 +92,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -118,12 +137,42 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+
+        classParams = args.split()
+        if classParams[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
+
+        elif len(classParams) == 1:
+            newInstance = HBNBCommand.classes[classParams[0]]()
+            print(newInstance.id)
+            storage.new(newInstance)
+            storage.save()
+
+        else:
+            newInstance = HBNBCommand.classes[classParams[0]]()
+            for params in classParams[1:]:
+                paramParse = params.split('=', 1)
+                key = paramParse[0]
+                if len(paramParse) > 1:
+                    value = paramParse[1]
+                else:
+                    continue
+
+                if len(paramParse) > 1:
+                    num = value.split('.')
+                    if checkInt(value, 1):
+                        newInstance.__dict__[key] = int(value)
+                    elif (len(num) > 1 and checkInt(num[0], 1) and checkInt(num[1], 0)):
+                        newInstance.__dict__[key] = float(value)
+                    elif value.startswith('"') and value.endswith('"'):
+                        noQuote = value[1:-1]
+                        if escQuotes(noQuote):
+                            noQuote = noQuote.replace('_', ' ')
+                            noQuote = noQuote.replace('\"', '"')
+                            newInstance.__dict__[key] = noQuote
+        print(newInstance.id)
+        storage.new(newInstance)
         storage.save()
 
     def help_create(self):
@@ -213,7 +262,7 @@ class HBNBCommand(cmd.Cmd):
             for k, v in storage._FileStorage__objects.items():
                 print_list.append(str(v))
 
-        print(print_list)
+        print('[%s]' % ', '.join(map(str, print_list)))
 
     def help_all(self):
         """ Help information for the all command """
@@ -319,6 +368,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
