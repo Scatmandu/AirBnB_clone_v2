@@ -42,15 +42,26 @@ class DBStorage:
             'State': State, 'City': City, 'Amenity': Amenity,
             'Review': Review
         }
-        if cls in classes:
-            return {"{}.{}".format(cls.__name__, item.id): item
-                    for item in self.__session.query(cls)}
+        if cls:
+            newDict = {}
+            allClassObjs = self.__session.query(classes[cls]).all()
+            for obj in allClassObjs:
+                key = type(obj).__name__ + "." + obj.id
+                newDict[key] = obj
+            return (newDict)
         else:
-            objs = {}
-            for c in classes:
-                objs.update({"{}.{}".format(c.__name__, item.id): item
-                             for item in self.__session.query(c)})
-            return objs
+            allDicts = {}
+
+            dictList = []
+            State = self.all('State')
+            City = self.all('City')
+            dictList.append(State)
+            dictList.append(City)
+
+            for dicts in dictList:
+                allDicts.update(dicts)
+
+            return(allDicts)
 
     def new(self, obj):
         '''new obj for sql'''
