@@ -9,7 +9,7 @@ import models
 
 
 class State(BaseModel, Base):
-    """ State class """
+    """ class State """
     __tablename__ = 'states'
 
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
