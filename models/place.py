@@ -6,7 +6,12 @@ import os
 
 
 class Place(BaseModel, Base):
-    """ A place to stay """
+    """
+    place class containing:
+    city id, user id, name, description, number of rooms,
+    number of bathrooms, max guest number, price per night,
+    latitude, and longitude
+    """
     __tablename__ = 'places'
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
