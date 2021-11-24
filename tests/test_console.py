@@ -15,5 +15,5 @@ class TestConsole(unittest.TestCase):
     def test_all(self):
     """ test all """
     with patch('sys.stdout', new=StringIO()) as file:
-        HBNBCommand().onecmd("all asdf")
+        HBNBCommand().onecmd("all widdly")
         self.assertEqual(file.getvalue(), "\n** class doesn't exist **\n")
