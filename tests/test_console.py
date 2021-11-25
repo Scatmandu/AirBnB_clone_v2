@@ -24,6 +24,12 @@ class TestConsole(unittest.TestCase):
         HBNBCommand().onecmd("show widdly")
         self.assertEqual(file.getvalue(), "\n** class doesn't exist **\n")
 
+    def test_destroy(self):
+    """ test all """
+    with patch('sys.stdout', new=StringIO()) as file:
+        HBNBCommand().onecmd("destroy widdly")
+        self.assertEqual(file.getvalue(), "\n** class doesn't exist **\n")
+
     def test_all(self):
     """ test all """
     with patch('sys.stdout', new=StringIO()) as file:
