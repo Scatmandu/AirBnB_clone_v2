@@ -7,7 +7,7 @@ import os
 
 
 class City(BaseModel, Base):
-    """ The city class, contains state ID and name """
+    """ class City, containing state ID, place, and name """
 
     __tablename__ = 'cities'
     state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
