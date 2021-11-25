@@ -35,3 +35,9 @@ class TestConsole(unittest.TestCase):
     with patch('sys.stdout', new=StringIO()) as file:
         HBNBCommand().onecmd("all widdly")
         self.assertEqual(file.getvalue(), "\n** class doesn't exist **\n")
+
+    def test_update(self):
+    """ test all """
+    with patch('sys.stdout', new=StringIO()) as file:
+        HBNBCommand().onecmd("update widdly")
+        self.assertEqual(file.getvalue(), "\n** class doesn't exist **\n")
