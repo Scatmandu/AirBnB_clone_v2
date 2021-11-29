@@ -55,8 +55,14 @@ class DBStorage:
             dictList = []
             State = self.all('State')
             City = self.all('City')
+            Place = self.all('Place')
+            Review = self.all('Review')
+            User = self.all('User')
             dictList.append(State)
             dictList.append(City)
+            dictList.append(Place)
+            dictList.append(Review)
+            dictList.append(User)
 
             for dicts in dictList:
                 allDicts.update(dicts)
