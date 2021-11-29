@@ -58,11 +58,13 @@ class DBStorage:
             Place = self.all('Place')
             Review = self.all('Review')
             User = self.all('User')
+            Amenity = self.all('Amenity')
             dictList.append(State)
             dictList.append(City)
             dictList.append(Place)
             dictList.append(Review)
             dictList.append(User)
+            dictList.append(Amenity)
 
             for dicts in dictList:
                 allDicts.update(dicts)
